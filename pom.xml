@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>vertx-openapi</module>
+        <module>vertx-redhat-series</module>
     </modules>
 
     <properties>
