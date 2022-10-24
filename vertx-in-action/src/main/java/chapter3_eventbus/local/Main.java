@@ -13,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
+        // deploy using the variants of deployVerticle that use reflection to instantiate the verticle classes
         vertx.deployVerticle("chapter3_eventbus.HeatSensor", new DeploymentOptions().setInstances(4));
         vertx.deployVerticle("chapter3_eventbus.Listener");
         vertx.deployVerticle("chapter3_eventbus.SensorData");
