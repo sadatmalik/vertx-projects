@@ -7,6 +7,7 @@ import io.vertx.core.net.NetSocket;
  * mvn compile exec:java
  * netcat localhost 3000
  * http GET localhost:8080  (using httpie)
+ * wrk --latency http://localhost:8080/
  *
  * @author sm@creativefusion.net
  */
