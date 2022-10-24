@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
  * communications: sending a message to sensor.average triggers a computation of the average based on the latest data,
  * and the result is sent back as a response.
  *
+ * The SensorData class has two event-bus handlers: one for sensor updates and one for average temperature computation
+ * requests. In one case, it updates entries in a Hash- Map, and in the other case, it computes the average and responds
+ * to the message sender.
+ *
  * @author sm@creativefusion.net
  */
 public class SensorData extends AbstractVerticle {
