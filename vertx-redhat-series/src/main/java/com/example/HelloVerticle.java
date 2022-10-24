@@ -15,7 +15,7 @@ public class HelloVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        log.info("started hello verticle");
+        //log.info("started hello verticle");
         vertx.eventBus().consumer("hello.vertx.addr", msg -> {
             msg.reply("Hello Vertx World!");
         });

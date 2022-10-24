@@ -1,0 +1,13 @@
+version: '2.1'
+
+services:
+  db:
+    image: "docker.io/library/postgres:latest"
+    hostname: psql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: introduction
+      POSTGRES_DB: todo
+      POSTGRES_ADMIN_PASSWORD: introduction

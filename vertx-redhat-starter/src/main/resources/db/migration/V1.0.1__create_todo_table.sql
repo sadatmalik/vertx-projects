@@ -8,4 +8,4 @@ CREATE TABLE todos (
                        PRIMARY KEY(id)
 );
 
-GRANT ALL ON todos TO introduction;
+GRANT ALL ON todos TO postgres;
