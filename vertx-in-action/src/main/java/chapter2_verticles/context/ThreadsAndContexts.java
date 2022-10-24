@@ -1,4 +1,4 @@
-package chapter2.context;
+package chapter2_verticles.context;
 
 import io.vertx.core.Context;
 import io.vertx.core.Vertx;

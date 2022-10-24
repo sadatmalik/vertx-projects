@@ -1,4 +1,4 @@
-package chapter2.worker;
+package chapter2_verticles.worker;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;

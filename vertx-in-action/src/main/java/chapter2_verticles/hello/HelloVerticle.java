@@ -1,4 +1,4 @@
-package chapter2.hello;
+package chapter2_verticles.hello;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;

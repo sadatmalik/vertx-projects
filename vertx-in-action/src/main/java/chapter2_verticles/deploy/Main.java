@@ -1,4 +1,4 @@
-package chapter2.deploy;
+package chapter2_verticles.deploy;
 
 import io.vertx.core.Vertx;
 

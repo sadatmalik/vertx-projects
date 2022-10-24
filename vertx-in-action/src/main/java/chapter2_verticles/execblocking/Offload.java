@@ -1,4 +1,4 @@
-package chapter2.execblocking;
+package chapter2_verticles.execblocking;
 
 
 import io.vertx.core.*;

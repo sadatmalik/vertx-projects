@@ -1,4 +1,4 @@
-package chapter1.firstapp;
+package chapter1_hello.firstapp;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetSocket;
