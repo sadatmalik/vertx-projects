@@ -61,7 +61,9 @@ local.properties
 # Intellij
 ######################
 .idea/
+.idea/*
 /.idea/
+/.idea/*
 *.iml
 *.iws
 *.ipr

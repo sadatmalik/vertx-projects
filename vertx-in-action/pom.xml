@@ -15,7 +15,7 @@
         <vertx.version>4.0.3</vertx.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-        <mainClass>chapter2.hello.HelloVerticle</mainClass>
+        <mainClass>chapter2.options.SampleVerticle</mainClass>
     </properties>
 
     <dependencyManagement>
