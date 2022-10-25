@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
  * If you are using IPv6 and encountering issues, you can add the -Djava.net.preferIPv4Stack=true flag to the JVM
  * parameters.
  *
+ * http://localhost:8080
+ * http://localhost:8081
+ *
  * @author sm@creativefusion.net
  */
 public class FirstInstance {
