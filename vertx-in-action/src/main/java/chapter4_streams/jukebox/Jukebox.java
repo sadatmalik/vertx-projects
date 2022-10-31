@@ -136,10 +136,13 @@ public class Jukebox extends AbstractVerticle {
         });
     }
 
-    // --------------------------------------------------------------------------------- //
-
+    /*
+     * Handling file download requests efficiently
+     */
     private void download(String path, HttpServerRequest request) {
         String file = "tracks/" + path;
+        // Unless you are on a networked filesystem, the possible blocking time is marginal,
+        // so we avoid a nested callback level:
         if (!vertx.fileSystem().existsBlocking(file)) {
             request.response().setStatusCode(404).end();
             return;
@@ -161,11 +164,15 @@ public class Jukebox extends AbstractVerticle {
                 .putHeader("Content-Type", "audio/mpeg")
                 .setChunked(true);
 
+        // Back-pressure is taken care of while copying data between the two streams, below. This is so commonly
+        // done when the strategy is to pause the source and not lose any data that the same code can be rewritten
+        // with a pipe - see downloadFilePipe
+
         file.handler(buffer -> {
             response.write(buffer);
-            if (response.writeQueueFull()) {
-                file.pause();
-                response.drainHandler(v -> file.resume());
+            if (response.writeQueueFull()) { // Writing too fast!
+                file.pause(); // Back-pressure application by pausing the read stream
+                response.drainHandler(v -> file.resume()); // Resuming when drained
             }
         });
 
@@ -177,7 +184,8 @@ public class Jukebox extends AbstractVerticle {
         response.setStatusCode(200)
                 .putHeader("Content-Type", "audio/mpeg")
                 .setChunked(true);
-        file.pipeTo(response);
+
+        file.pipeTo(response); // Pipes data from file to response
     }
 
     // --------------------------------------------------------------------------------- //
