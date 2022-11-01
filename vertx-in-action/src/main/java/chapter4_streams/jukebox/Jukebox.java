@@ -32,7 +32,12 @@ public class Jukebox extends AbstractVerticle {
     private enum State {PLAYING, PAUSED}
     private State currentMode = State.PAUSED;
     private final Queue<String> playlist = new ArrayDeque<>();
+
+    // streaming
     private final Set<HttpServerResponse> streamers = new HashSet<>();
+    private AsyncFile currentFile;
+    private long positionInFile;
+
 
     @Override
     public void start() {
@@ -48,7 +53,7 @@ public class Jukebox extends AbstractVerticle {
                 .requestHandler(this::httpHandler)
                 .listen(8080);
 
-        vertx.setPeriodic(100, this::streamAudioChunk);
+        vertx.setPeriodic(100, this::streamAudioChunk); // streamAudioChunk periodically pushes new MP3 data
     }
 
     /*
@@ -188,11 +193,14 @@ public class Jukebox extends AbstractVerticle {
         file.pipeTo(response); // Pipes data from file to response
     }
 
-    // --------------------------------------------------------------------------------- //
-
-    private AsyncFile currentFile;
-    private long positionInFile;
-
+    /*
+     * streaming to connected streamers
+     *
+     * Read data every 100 milliseconds with read buffers of 4096 bytes - empirically found these values work
+     * well for 320 KBps constant bit rate MP3 files on my laptop. They ensured no drops in tests while preventing
+     * players from buffering too much data, and thus ending several seconds apart in the audio stream.
+     *
+     */
     private void streamAudioChunk(long id) {
         if (currentMode == State.PAUSED) {
             return;
@@ -204,9 +212,11 @@ public class Jukebox extends AbstractVerticle {
         if (currentFile == null) {
             openNextFile();
         }
+
+        // Buffers cannot be reused across I/O operations, so we need a new one each time
         currentFile.read(Buffer.buffer(4096), 0, positionInFile, 4096, ar -> {
             if (ar.succeeded()) {
-                processReadBuffer(ar.result());
+                processReadBuffer(ar.result()); // This is where data is being copied to all players
             } else {
                 logger.error("Read failed", ar.cause());
                 closeCurrentFile();
@@ -214,11 +224,11 @@ public class Jukebox extends AbstractVerticle {
         });
     }
 
-    // --------------------------------------------------------------------------------- //
-
     private void openNextFile() {
         logger.info("Opening {}", playlist.peek());
         OpenOptions opts = new OpenOptions().setRead(true);
+
+        // Again, using the blocking variant - rarely an issue for opening a file
         currentFile = vertx.fileSystem()
                 .openBlocking("tracks/" + playlist.poll(), opts);
         positionInFile = 0;
@@ -231,19 +241,20 @@ public class Jukebox extends AbstractVerticle {
         currentFile = null;
     }
 
-    // --------------------------------------------------------------------------------- //
-
     private void processReadBuffer(Buffer buffer) {
         logger.info("Read {} bytes from pos {}", buffer.length(), positionInFile);
         positionInFile += buffer.length();
-        if (buffer.length() == 0) {
+        if (buffer.length() == 0) { // end of file has been reached
             closeCurrentFile();
             return;
         }
         for (HttpServerResponse streamer : streamers) {
-            if (!streamer.writeQueueFull()) {
-                streamer.write(buffer.copy());
+            if (!streamer.writeQueueFull()) { // Back-pressure - if write queue full simply discard the data
+                streamer.write(buffer.copy()); // Remember, buffers cannot be reused
             }
         }
     }
 }
+
+
+
