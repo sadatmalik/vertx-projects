@@ -6,6 +6,9 @@ import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.OpenOptions;
 
 /**
+ * A program that writes sample database records to a file with two key/value entries. Demonstrates how
+ * to use the Vert.x filesystem APIs to open a file, append data to a buffer, and then write it.
+ *
  * @author sm@creativefusion.net
  */
 public class SampleDatabaseWriter {
