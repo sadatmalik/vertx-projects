@@ -76,7 +76,7 @@ public class NetControl extends AbstractVerticle {
     }
 
     /*
-     * Each buffer is known to be a line, so go directly to processing commands
+     * Handling parsed buffers - each buffer is known to be a line, so go directly to processing commands
      */
     private void handleBuffer(NetSocket socket, Buffer buffer) {
         String command = buffer.toString();
@@ -99,10 +99,8 @@ public class NetControl extends AbstractVerticle {
         }
     }
 
-    // --------------------------------------------------------------------------------- //
-
     private void schedule(String command) {
-        String track = command.substring(10);
+        String track = command.substring(10); // The first 10 characters are for /schedule and a space.
         JsonObject json = new JsonObject().put("file", track);
         vertx.eventBus().send("jukebox.schedule", json);
     }
@@ -111,6 +109,8 @@ public class NetControl extends AbstractVerticle {
         vertx.eventBus().request("jukebox.list", "", reply -> {
             if (reply.succeeded()) {
                 JsonObject data = (JsonObject) reply.result().body();
+
+                // We write each filename to the standard console output
                 data.getJsonArray("files")
                         .stream().forEach(name -> socket.write(name + "\n"));
             } else {
