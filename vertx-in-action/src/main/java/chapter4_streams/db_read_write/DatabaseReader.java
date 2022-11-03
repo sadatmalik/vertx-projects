@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
  * e.g. parsing buffers of fixed size 5, then switch to parsing based on tab characters, then chunks of 12 bytes,
  * and so on.
  *
+ * These on-the-fly parser mode and handler changes form a very simple yet effective way to parse complex streams.
+ *
  * @author sm@creativefusion.net
  */
 public class DatabaseReader {
