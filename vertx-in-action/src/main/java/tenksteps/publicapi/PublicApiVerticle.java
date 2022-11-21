@@ -36,7 +36,7 @@ import java.util.Set;
  * Uses:
  * - vertx-web to provide advanced HTTP request-processing functionality
  * - vertx-web-client to issue HTTP requests to the user profile and activity services
- * - vertx-auth-jwt to generate and process JSON web tokens and perform access
+ * - vertx-auth-jwt to generate and process JSON web tokens and perform access.
  *
  * @author sm@creativefusion.net
  */
