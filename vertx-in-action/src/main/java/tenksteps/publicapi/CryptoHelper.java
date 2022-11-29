@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
+ * The code in CryptoHelper uses blocking APIs. Since this code is run once at initialization, and PEM files are
+ * small, we can afford a possible yet negligible blocking of the event loop.
+ *
  * @author sm@creativefusion.net
  */
 class CryptoHelper {
@@ -20,9 +23,9 @@ class CryptoHelper {
     }
 
     private static String read(String file) throws IOException {
-        Path path = Paths.get("public-api", file);
+        Path path = Paths.get("vertx-in-action", file);
         if (!path.toFile().exists()) {
-            path = Paths.get("..", "public-api", file);
+            path = Paths.get("..", "vertx-in-action", file);
         }
         return String.join("\n", Files.readAllLines(path, StandardCharsets.UTF_8));
     }

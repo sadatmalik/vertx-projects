@@ -70,6 +70,7 @@ public class PublicApiVerticle extends AbstractVerticle {
 
         Router router = Router.router(vertx);
 
+        // CORS
         Set<String> allowedHeaders = new HashSet<>();
         allowedHeaders.add("x-requested-with");
         allowedHeaders.add("Access-Control-Allow-Origin");
@@ -163,6 +164,11 @@ public class PublicApiVerticle extends AbstractVerticle {
         ctx.fail(502);
     }
 
+    /*
+     * A typical RxJava composition of asynchronous operations with flatMap to chain requests.
+     *
+     * Also uses the declarative API of the Vert.x router to specify that we expect the first request to be a success.
+     */
     private void token(RoutingContext ctx) {
         JsonObject payload = ctx.getBodyAsJson();
         String username = payload.getString("username");
@@ -248,8 +254,11 @@ public class PublicApiVerticle extends AbstractVerticle {
                         err -> sendBadGateway(ctx, err));
     }
 
+    /*
+     * The device identifier is extracted from the JWT token data and passed along to the web client request.
+     */
     private void monthlySteps(RoutingContext ctx) {
-        String deviceId = ctx.user().principal().getString("deviceId");
+        String deviceId = ctx.user().principal().getString("deviceId"); // From the JWT token
         String year = ctx.pathParam("year");
         String month = ctx.pathParam("month");
         webClient
