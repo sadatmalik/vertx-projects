@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * The ingestion service is a good example of integration using different input protocols. Ingests from
+ * AMQP and HTTP onto Kafka records.
+ *
  * @author sm@creativefusion.net
  */
 public class IngesterVerticle extends AbstractVerticle {
